@@ -44,15 +44,21 @@
     </nav>
 
     <div class="container">
-        <h1>About me</h1>
-        <h2>서울사람</h2>
-        <p>HTML, CSS, JS, Django 시작</p>
+        <div class="row">
+            <div class="col-9">
+                <h1>About me</h1>
+                <h2>서울사람</h2>
+                <p>HTML, CSS, JS, Django 시작</p>
 
-        <button onclick="whatTimeIsIt()">현재시간</button>
-        <hr />
+                <button onclick="whatTimeIsIt()">현재시간</button>
+                <hr />
 
-        <a href="index.html">첫 화면으로 가기</a>
-        <img src="./images/cool-guy.jpg" height="100px">
+                <a href="index.html">첫 화면으로 가기</a>
+            </div>
+            <div class="col-3">
+                <img src="./images/cool-guy.jpg" class="img-fluid w-100">
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
