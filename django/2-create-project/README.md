@@ -32,7 +32,7 @@ INSTALLED_APPS = [
 
 ### 이후, DB에 반영하기
 ```bash
-# app 변경 등록
+# app 변경사항 등록
 python manage.py makemigrations
 
 # DB에 모델 적용
