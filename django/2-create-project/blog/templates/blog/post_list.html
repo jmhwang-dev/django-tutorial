@@ -4,8 +4,8 @@
 
 <head>
     <title>Blog</title>
-    <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}"  media="screen">
-    
+    <link rel="stylesheet" href="{% static 'blog/bootstrap/bootstrap.min.css' %}" media="screen">
+
     <!-- fontawesome key -->
     <script src="#" crossorigin="anonymous"></script>
 </head>
@@ -62,11 +62,14 @@
                 <div class="modal-body">
                     <div class="row">
                         <div class="col-md-6 d-grid gap-2 bg-primary">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa-brands fa-google"></i> Log in with Google</button>
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-envelope"></i> Log in with E-mail</button>
+                            <button type="button" class="btn btn-outline-dark btn-sm"><i
+                                    class="fa-brands fa-google"></i> Log in with Google</button>
+                            <button type="button" class="btn btn-outline-dark btn-sm"><i
+                                    class="fa-solid fa-envelope"></i> Log in with E-mail</button>
                         </div>
                         <div class="col-md-6 d-grid gap-2 align-self-start bg-success">
-                            <button type="button" class="btn btn-outline-dark btn-sm"><i class="fa-solid fa-envelope"></i> Sign up with E-mail</button>
+                            <button type="button" class="btn btn-outline-dark btn-sm"><i
+                                    class="fa-solid fa-envelope"></i> Sign up with E-mail</button>
                         </div>
                     </div>
                 </div>
@@ -84,8 +87,7 @@
                 {% for p in post_list %}
                 <!-- Blog post-->
                 <div class="card mb-4">
-                    <a href="#!"><img class="card-img-top" src="{{ p.head_image.url }}"
-                            alt="..." /></a>
+                    <a href="#!"><img class="card-img-top" src="{{ p.head_image.url }}" alt="..." /></a>
                     <div class="card-body">
                         <div class="small text-muted">{{ p.created_at }}</div>
                         <h2 class="card-title h4">{{ p.title }}</h2>
