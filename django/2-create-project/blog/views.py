@@ -5,7 +5,7 @@ from .models import Post
 # Create your views here.
 class PostList(ListView):
     model = Post
-    template_name = "blog/index.html"   # 기본 템플릿 지정 방법1
+    ordering = '-pk'
     
 def single_post_page(request, pk):
     post = Post.objects.get(pk=pk)
