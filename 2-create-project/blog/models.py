@@ -23,6 +23,7 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     
     author = models.ForeignKey(User, null=True, on_delete=models.SET_NULL)
+    category = models.ForeignKey(Category, null=True, on_delete=models.SET_NULL)
 
     def __str__(self) -> str:
         return f'[{self.pk}]{self.title} :: {self.author}'
