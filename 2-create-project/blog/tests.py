@@ -1,6 +1,6 @@
 from django.test import TestCase, Client
 from bs4 import BeautifulSoup
-from .models import Post
+from .models import Post, Category
 from django.contrib.auth.models import User
 
 # Create your tests here.
@@ -10,6 +10,28 @@ class TestView(TestCase):
         self.client = Client()
         self.user_trump = User.objects.create_user(username='trump', password="somepassword")
         self.user_obama = User.objects.create_user(username='obama', password="somepassword")
+
+        self.category_programming = Category.objects.create(name="programming", slug="programming")
+        self.category_music = Category.objects.create(name="music", slug="music")
+
+        self.self.post_001 = Post.objects.create(
+            title="첫 번째 포스트입니다.",
+            content="Hello World. We are the world.",
+            category=self.category_programming,
+            author=self.user_trump,
+        )
+        self.self.post_002 = Post.objects.create(
+            title="두 번째 포스트입니다.",
+            content="1등이 전부는 아니잖아요?",
+            category=self.category_music,
+            author=self.user_obama,
+        )
+        self.post_003 = Post.objects.create(
+            title="세 번째 포스트입니다.",
+            content="category가 없을 수도 있죠",
+            category=self.category_music,
+            author=self.user_obama,
+        )
 
     def navbar_test(self, soup):
         # 1.4 내비게이션 바가 있다.
@@ -50,17 +72,7 @@ class TestView(TestCase):
         main_area = soup.find('div', id="main-area")
         self.assertIn('아직 게시물이 없습니다.', main_area.text)
 
-        # 3.1 포스트가 2개가 만들었을 때,
-        post_001 = Post.objects.create(
-            title="첫 번째 포스트입니다.",
-            content="Hello World. We are the world.",
-            author=self.user_trump,
-        )
-        post_002 = Post.objects.create(
-            title="두 번째 포스트입니다.",
-            content="1등이 전부는 아니잖아요?",
-            author=self.user_obama,
-        )
+        
         self.assertEqual(Post.objects.count(), 2)
 
         # 3.2 포스트 목록을 새로고침 하면
@@ -70,8 +82,8 @@ class TestView(TestCase):
 
         # 3.3 main-area에 포스트 2개의 제목이 존재하고
         main_area = soup.find('div', id='main-area')
-        self.assertIn(post_001.title, main_area.text)
-        self.assertIn(post_002.title, main_area.text)
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertIn(self.post_002.title, main_area.text)
 
         # 3.4 '아직 게시물이 없습니다.' 라는 문구는 더이상 나타나지 않는다.
         self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
@@ -81,18 +93,12 @@ class TestView(TestCase):
         self.assertIn(self.user_obama.username.upper(), main_area.text)
 
     def test_post_detail(self,):
-        # 1.1 Post가 하나 있다.
-        post_001 = Post.objects.create(
-            title="첫 번째 포스트입니다.",
-            content="Hello World. We are the world",
-            author=self.user_trump,
-        )
         # 1.2 그 포스트의 url 은 'blog/1/'이다.
-        self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
+        self.assertEqual(self.post_001.get_absolute_url(), '/blog/1/')
 
         # 2. 첫 번째 포스트의 상세 페이지 테스트
         # 2.1. 첫 번째 post url로 접근하면 정상적으로 작동한다. (status code: 200)
-        response = self.client.get(post_001.get_absolute_url())
+        response = self.client.get(self.post_001.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
         # 2.2 포스트 목록 페이지와 똑같은 내비게이션 bar가 있다.
@@ -100,17 +106,17 @@ class TestView(TestCase):
         self.navbar_test(soup)
 
         # 2.3 첫 번째 포스트의 제목이 웹 브라우저 탭 타이틀에 들어 있다.
-        self.assertIn(post_001.title, soup.title.text)
+        self.assertIn(self.post_001.title, soup.title.text)
 
         # 2.4 첫 번째 포스트의 제목이 포스트 영역(post_area)에 있다.
         main_area = soup.find('div', id='main-area')
         post_area = main_area.find('div', id='post-area')
-        self.assertIn(post_001.title, post_area.text)
+        self.assertIn(self.post_001.title, post_area.text)
 
         # 2.5 첫 번째 포스트의 작성자(author)가 포스트 영역에 있다.
         # 아직 작성 불가
 
         # 2.6 첫 번째 포스트의 내용(content)이 포스트 영역에 있다.
-        self.assertIn(post_001.content, post_area.text)
+        self.assertIn(self.post_001.content, post_area.text)
 
         self.assertIn(self.user_trump.username.upper(), post_area.text)
