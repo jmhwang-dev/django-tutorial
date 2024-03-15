@@ -84,7 +84,8 @@ class TestView(TestCase):
         # 1.1 Post가 하나 있다.
         post_001 = Post.objects.create(
             title="첫 번째 포스트입니다.",
-            content="Hello World. We are the world"
+            content="Hello World. We are the world",
+            author=self.user_trump,
         )
         # 1.2 그 포스트의 url 은 'blog/1/'이다.
         self.assertEqual(post_001.get_absolute_url(), '/blog/1/')
@@ -111,3 +112,5 @@ class TestView(TestCase):
 
         # 2.6 첫 번째 포스트의 내용(content)이 포스트 영역에 있다.
         self.assertIn(post_001.content, post_area.text)
+
+        self.assertIn(self.user_trump.username.upper(), post_area.text)
