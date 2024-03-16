@@ -86,6 +86,15 @@ class TestView(TestCase):
         self.assertIn('미분류', post_003_card.text)
         self.assertIn(self.post_003.title, post_003_card.text)
 
+        # 포스트가 없는 경우
+        Post.objects.all().delete()
+        self.assertEqual(Post.objects.count(), 0)
+        
+        response = self.client.get('/blog/')
+        soup = BeautifulSoup(response.content, 'html.parser')
+        main_area = soup.find('div', id='main-area')
+        self.assertIn('아직 게시물이 없습니다.', main_area.text)
+
     def test_post_detail(self,):
         # 1.2 그 포스트의 url 은 'blog/1/'이다.
         self.assertEqual(self.post_001.get_absolute_url(), '/blog/1/')
