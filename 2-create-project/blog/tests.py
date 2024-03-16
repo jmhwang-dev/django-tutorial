@@ -33,7 +33,7 @@ class TestView(TestCase):
             author=self.user_obama,
         )
         
-    def category_test(self, soup):
+    def category_card_test(self, soup):
         categories_card = soup.find('div', id='categories_card')
         self.assertIn("Categories", categories_card.text)
         self.assertIn(f"{self.category_programming.name} ({self.category_programming.post_set.count()})", categories_card.text)
@@ -61,7 +61,17 @@ class TestView(TestCase):
         self.assertEqual(about_me_btn.attrs['href'], '/about_me/')
 
     def test_post_list(self):
-        pass
+        # 포스트가 있는 경우
+        self.assertEqual(Post.objects.count(), 3)
+
+        response = self.client.get('/blog/')
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.navbar_test(soup)
+        self.category_card_test(soup)
+
         
 
     def test_post_detail(self,):
