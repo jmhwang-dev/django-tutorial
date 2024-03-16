@@ -29,7 +29,6 @@ class TestView(TestCase):
         self.post_003 = Post.objects.create(
             title="세 번째 포스트입니다.",
             content="category가 없을 수도 있죠",
-            category=self.category_music,
             author=self.user_obama,
         )
         
