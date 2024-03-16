@@ -71,6 +71,8 @@ class TestView(TestCase):
         self.navbar_test(soup)
         self.category_card_test(soup)
 
+        main_area = soup.find('div', id="main-area")
+        self.assertNotIn('아직 게시물이 없습니다.', main_area.text)
         
 
     def test_post_detail(self,):
