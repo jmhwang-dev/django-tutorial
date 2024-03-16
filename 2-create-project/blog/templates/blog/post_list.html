@@ -5,7 +5,7 @@
     {% if post_list.exists %}
     {% for p in post_list %}
     <!-- Blog post-->
-    <div class="card mb-4">
+    <div class="card mb-4" id="post-{{ p.pk }}">
 
         {% if p.head_image %}
         <img class="card-img-top" src="{{ p.head_image.url }}" alt="{{ p }} head image" />
@@ -17,6 +17,7 @@
             <div class="small text-muted">
                 Posted on {{ p.created_at }} by <a href="#"> {{ p.author | upper}}</a>
             </div>
+            <span class="badge badge-secondary float-right">{{ p.category }}</span>
             <h2 class="card-title h4">{{ p.title }}</h2>
             {% if p.hook_text %}
             <h5 class="text-muted">{{ p.hook_text }}</h5>
