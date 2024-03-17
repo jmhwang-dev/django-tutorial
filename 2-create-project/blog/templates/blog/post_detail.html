@@ -17,8 +17,11 @@
           <!-- Post meta content-->
           <div class="text-muted fst-italic mb-2">Posted on {{ post.created_at }} by {{ post.author | upper }}</div>
           <!-- Post categories-->
-          <a class="badge bg-secondary text-decoration-none link-light" href="#!">Web Design</a>
-          <a class="badge bg-secondary text-decoration-none link-light" href="#!">Freebies</a>
+            {% if post.category %}
+                <span class="badge text-bg-info">{{ post.category }}</span>
+            {% else %}
+                <span class="badge text-bg-info">미분류</span>
+            {% endif%}
       </header>
       <!-- Preview image figure-->
       <figure class="mb-4">
