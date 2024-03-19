@@ -147,6 +147,10 @@ class TestView(TestCase):
         # 2.6 첫 번째 포스트의 내용(content)이 포스트 영역에 있다.
         self.assertIn(self.post_001.content, post_area.text)
 
+        self.assertIn(self.tag_hello.name, post_area.text)
+        self.assertNotIn(self.tag_python.name, post_area.text)
+        self.assertNotIn(self.tag_python_kor.name, post_area.text)        
+
         self.assertIn(self.user_trump.username.upper(), post_area.text)
 
     def test_category_page(self,):
