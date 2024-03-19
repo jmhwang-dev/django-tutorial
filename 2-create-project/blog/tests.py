@@ -85,6 +85,7 @@ class TestView(TestCase):
         post_001_card = main_area.find('div', id='post-1')
         self.assertIn(self.post_001.title, post_001_card.text)
         self.assertIn(self.post_001.category.name, post_001_card.text)
+        self.assertIn(self.post_001.author.username.upper(), post_001_card.text)
         
         self.assertIn(self.tag_hello.name, post_001_card.text)
         self.assertNotIn(self.tag_python.name, post_001_card.text)
@@ -93,6 +94,7 @@ class TestView(TestCase):
         post_002_card = main_area.find('div', id='post-2')
         self.assertIn(self.post_002.title, post_002_card.text)
         self.assertIn(self.post_002.category.name, post_002_card.text)
+        self.assertIn(self.post_002.author.username.upper(), post_002_card.text)
 
         self.assertNotIn(self.tag_hello.name, post_002_card.text)
         self.assertNotIn(self.tag_python.name, post_002_card.text)
@@ -101,6 +103,7 @@ class TestView(TestCase):
         post_003_card = main_area.find('div', id='post-3')
         self.assertIn('미분류', post_003_card.text)
         self.assertIn(self.post_003.title, post_003_card.text)
+        self.assertIn(self.post_003.author.username.upper(), post_003_card.text)
 
         self.assertNotIn(self.tag_hello.name, post_003_card.text)
         self.assertIn(self.tag_python.name, post_003_card.text)
