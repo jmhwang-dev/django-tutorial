@@ -47,6 +47,9 @@ class TestView(TestCase):
         soup = BeautifulSoup(response.content, 'html.parser')
         self.navbar_test(soup)
         self.category_card_test(soup)
+
+        main_area = soup.find('div', id='main-area')
+        self.assertIn(self.tag_hello.name, main_area.h1.text)
     
     def category_card_test(self, soup):
         categories_card = soup.find('div', id='categories_card')
