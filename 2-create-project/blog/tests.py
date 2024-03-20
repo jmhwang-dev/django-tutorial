@@ -39,7 +39,11 @@ class TestView(TestCase):
         )
         self.post_003.tags.add(self.tag_python_kor)
         self.post_003.tags.add(self.tag_python)
-        
+
+    def test_tag_page(self,):
+        response = self.client.get(self.tag_hello.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+    
     def category_card_test(self, soup):
         categories_card = soup.find('div', id='categories_card')
         self.assertIn("Categories", categories_card.text)
