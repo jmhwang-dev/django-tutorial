@@ -50,6 +50,10 @@ class TestView(TestCase):
 
         main_area = soup.find('div', id='main-area')
         self.assertIn(self.tag_hello.name, main_area.h1.text)
+
+        self.assertIn(self.post_001.title, main_area.text)
+        self.assertNotIn(self.post_002.title, main_area.text)
+        self.assertNotIn(self.post_003.title, main_area.text)
     
     def category_card_test(self, soup):
         categories_card = soup.find('div', id='categories_card')
