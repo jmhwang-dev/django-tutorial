@@ -1,9 +1,12 @@
 from typing import Any
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import Post, Category, Tag
 
 # Create your views here.
+class PostCreate(CreateView):
+    model = Post
+    fields = ['title', 'hook_text', 'content', 'head_image', 'file_upload', 'category']
 class PostList(ListView):
     model = Post
     ordering = '-pk'

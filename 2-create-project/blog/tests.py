@@ -178,3 +178,7 @@ class TestView(TestCase):
 
         main_area = soup.find('div', id="main-area")
         self.assertIn(self.category_programming.name, main_area.h1.text)
+
+    def test_create_page(self,):
+        response = self.client.get('/blog/create_post/')
+        self.assertEqual(response.status_code, 200)
