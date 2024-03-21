@@ -220,3 +220,22 @@ class TestView(TestCase):
         # 로그인하지 않은 경우
         response = self.client.get(update_post_url)
         self.assertNotEqual(response.status_code, 200)
+
+
+        # 작성자가 아닌 계정이 로그인 후 접근한 경우 - trump
+        self.assertNotEqual(self.post_003.author, self.user_trump)  # post의 작성자가 트럼프가 아님을 먼저 확인
+        
+        self.client.login(
+            username=self.user_trump.username,
+            password='somepassword'
+        )
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 403)
+
+        # 작성자가 로그인 후 접근한 경우 - obama
+        self.client.login(
+            username=self.post_003.author, # obama
+            password='somepassword'
+        )
+        response = self.client.get(update_post_url)
+        self.assertEqual(response.status_code, 200)
