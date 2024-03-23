@@ -202,6 +202,9 @@ class TestView(TestCase):
         main_area = soup.find('div', id='main-area')
         self.assertIn('Create New Post', main_area.text)
 
+        tag_str_input = main_area.find('input', id="id_tags_str")
+        self.assertTrue(tag_str_input)
+
         self.client.post(
             '/blog/create_post/',
             {
