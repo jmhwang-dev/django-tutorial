@@ -7,3 +7,7 @@ pillow==10.2.0
 django_extensions==3.2.3
 ipython==8.22.2
 # end
+
+# form 형식 꾸미기
+django-crispy-forms==2.1
+crispy-bootstrap4==2024.1
