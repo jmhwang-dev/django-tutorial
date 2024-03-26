@@ -37,7 +37,7 @@
       </figure>
       <!-- Post content-->
       <section class="mb-5">
-        <p>{{ post.content }}</p>
+        <p>{{ post.get_content_markdown | safe }}</p>   <!-- safe: HTML escaping 방지 -->
         
         {% if post.tags.exists %}
             <i class="fas fa-tags"></i>
