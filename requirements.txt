@@ -14,3 +14,6 @@ crispy-bootstrap4==2024.1
 
 # 마크다운 문법 적용
 django-markdownx==4.0.7
+
+# sns 계정으로 로그인
+django-allauth==0.61.1
