@@ -281,3 +281,20 @@ class TestView(TestCase):
         self.assertIn('세 번째 포스트를 수정했습니다.', main_area.text)
         self.assertIn("안녕 세계? 우리는 하나!", main_area.text)
         self.assertIn(self.category_music.name , main_area.text)
+
+    def test_comment_form(self,):
+        # 샘플 댓글에 대한 테스트
+        self.assertEqual(Comment.objects.count(), 1)
+        self.assertEqual(self.post_001.comment_set.count(), 1)
+
+        # 로그인하지 않은 상태
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        soup = BeautifulSoup(response.content, 'html.parser')
+        comment_area = soup.find('div', id='comment-area')
+        placeholder = comment_area.find('textarea').get('placeholder', '')
+        self.assertIn('Log in and leave a comment!', placeholder)
+        self.assertFalse(comment_area.find('form', id='comment-form'))
+
+        
