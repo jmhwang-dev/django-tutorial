@@ -66,3 +66,10 @@ class Comment(models.Model):
 
     def __str__(self,):
         return f'{self.author}::{self.content}'
+    
+    def get_absolute_url(self,):
+        """
+        VIEW ON SITE 버튼 추가
+        : 관리자 페이지에서 포스트에 대한 댓글 위치로 바로 이동하는 기능
+        """
+        return f'{self.post.get_absolute_url()}#comment-{self.pk}'  # 여기서 '#'은 HTML 요소의 id를 의미한다.
