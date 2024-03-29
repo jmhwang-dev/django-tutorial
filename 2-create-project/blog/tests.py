@@ -305,5 +305,5 @@ class TestView(TestCase):
         ##
         soup = BeautifulSoup(response.content, 'html.parser')
         comment_area = soup.find('div', id='comment-area')
-        text_area = comment_area.find('textarea')
-        self.assertNotIn(text_area, comment_area)
+        placeholder = comment_area.find('textarea').get('placeholder', '')
+        self.assertNotIn('Log in and leave a comment!', placeholder)
