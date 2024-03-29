@@ -297,4 +297,13 @@ class TestView(TestCase):
         self.assertIn('Log in and leave a comment!', placeholder)
         self.assertFalse(comment_area.find('form', id='comment-form'))
 
-        
+        # 로그인한 상태
+        self.client.login(username='obama', password="somepassword")
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+
+        ##
+        soup = BeautifulSoup(response.content, 'html.parser')
+        comment_area = soup.find('div', id='comment-area')
+        text_area = comment_area.find('textarea')
+        self.assertNotIn(text_area, comment_area)
