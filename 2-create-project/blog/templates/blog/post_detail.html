@@ -61,11 +61,19 @@
   <section class="mb-5">
     <div class="card bg-light">
         <div class="card-body">
+            {% if user.is_authenticated %}
             <!-- Comment form-->
-            <form class="mb-4">
-                <textarea class="form-control" rows="3" placeholder="Log in and leave a comment!"></textarea>
+            <form id="comment-form" method="POST" action="{{ post.get_absolute.url }}new_comment/">
+                <div class="form-group">
+                    <textarea class="form-control" rows="3"></textarea>
+                </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>
+            {% else %}
+            <form class="mb-4">
+                <textarea class="form-control" rows="3" placeholder="Log in and leave a comment!"></textarea>
+            </form>
+            {% endif %}
             
             {% if post.comment_set.exists %}
                 {% for comment in post.comment_set.iterator %}
