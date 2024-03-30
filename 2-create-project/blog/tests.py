@@ -307,3 +307,28 @@ class TestView(TestCase):
         comment_area = soup.find('div', id='comment-area')
         placeholder = comment_area.find('textarea').get('placeholder', '')
         self.assertNotIn('Log in and leave a comment!', placeholder)
+
+
+        # TODO: socailaccount error 해결하고 테스트하기
+        comment_form = comment_area.find('form', id='comment-form')
+        self.assertTrue(comment_form.find('textarea', id='id_content'))
+        response = self.client.post(
+            self.post_001.get_absolute_url() + 'new_comment/',
+            {
+                'content': "오바마의 댓글입니다.",
+            },
+            follow=True
+        )
+        self.assertEqual(response.status_code, 200)
+
+        self.assertEqual(Comment.objects.count(), 2)
+        self.assertEqual(self.post_001.comment_set.count(), 2)
+
+        new_comment = Comment.objects.last()
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(new_comment.post.title, soup.title.text)
+    
+        comment_area = soup.find('div', id="comment-area")
+        new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
+        self.assertIn('obama', new_comment_div.text)
+        self.assertIn('오바마의 댓글입니다.', new_comment_div.text)
