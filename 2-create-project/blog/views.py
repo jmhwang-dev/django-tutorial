@@ -115,12 +115,14 @@ def new_comment(request, pk):
         if request.method == 'POST':
             comment_form = CommentForm(request.POST)
             if comment_form.is_valid():
-                comment = comment_form.save(commit=False)
+                comment = comment_form.save(commit=False)   # DB에 바로 저장하지 않고 Comment 인스턴스만 가져옴
                 comment.post = post
                 comment.author = request.user
                 comment.save()
                 return redirect(comment.get_absolute_url())
         else:
+            # locahost:8000/10/new_comment/ 와 같이 GET 방식으로 서버에 요청하는 경우를 대비해 임의로 pk=10인 포스트의 페이지로 리다이렉트 되도록 함
+            post = get_object_or_404(Post, pk=10)
             return redirect(post.get_absolute_url())
     else:
         raise PermissionDenied
