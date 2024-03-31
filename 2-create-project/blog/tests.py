@@ -297,7 +297,7 @@ class TestView(TestCase):
         self.assertIn('Log in and leave a comment!', placeholder)
         self.assertFalse(comment_area.find('form', id='comment-form'))
 
-        # 로그인한 상태
+        # 로그인한 상태 (social 계정 아님)
         self.client.login(username='obama', password="somepassword")
         response = self.client.get(self.post_001.get_absolute_url())
         self.assertEqual(response.status_code, 200)

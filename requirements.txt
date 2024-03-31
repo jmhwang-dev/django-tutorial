@@ -17,3 +17,4 @@ django-markdownx==4.0.7
 
 # sns 계정으로 로그인
 django-allauth==0.61.1
+python-dotenv==1.0.1
