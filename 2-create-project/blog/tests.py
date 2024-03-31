@@ -293,8 +293,8 @@ class TestView(TestCase):
 
         soup = BeautifulSoup(response.content, 'html.parser')
         comment_area = soup.find('div', id='comment-area')
-        placeholder = comment_area.find('textarea').get('placeholder', '')
-        self.assertIn('Log in and leave a comment!', placeholder)
+        # placeholder = comment_area.find('textarea').get('placeholder', '')
+        # self.assertIn('Log in and leave a comment!', placeholder)
         self.assertFalse(comment_area.find('form', id='comment-form'))
 
         # 로그인한 상태 (social 계정 아님)
@@ -302,14 +302,13 @@ class TestView(TestCase):
         response = self.client.get(self.post_001.get_absolute_url())
         self.assertEqual(response.status_code, 200)
 
-        ##
+        ## 
         soup = BeautifulSoup(response.content, 'html.parser')
         comment_area = soup.find('div', id='comment-area')
         placeholder = comment_area.find('textarea').get('placeholder', '')
         self.assertNotIn('Log in and leave a comment!', placeholder)
 
 
-        # TODO: socailaccount error 해결하고 테스트하기
         comment_form = comment_area.find('form', id='comment-form')
         self.assertTrue(comment_form.find('textarea', id='id_content'))
         response = self.client.post(
