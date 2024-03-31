@@ -65,6 +65,7 @@
             {% if user.is_authenticated %}
             <!-- Comment form-->
             <form id="comment-form" method="POST" action="{{ post.get_absolute.url }}new_comment/">
+                {% csrf_token %}
                 <div class="form-group">
                     {{ comment_form | crispy }}
                 </div>
