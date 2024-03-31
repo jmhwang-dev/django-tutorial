@@ -13,6 +13,8 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
+if os.getenv('CLIENT_ID') is None or os.getenv('SECRET_KEY') is None:
+  raise FileNotFoundError(".env does not exist")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
