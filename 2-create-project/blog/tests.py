@@ -363,7 +363,21 @@ class TestView(TestCase):
         self.assertEqual(response.status_code, 200)
         soup = BeautifulSoup(response.content, 'html.parser')
 
+        # 수정 페이지가 맞는지
         self.assertEqual('Edit Comment - Blog', soup.title.text)
         update_comment_form = soup.find('form', id='comment-form')
         comment_textarea = update_comment_form.find('textarea', id='id_content') # ??
-        self.assertIn(self.comment_001.content, comment_textarea.text)
+        self.assertIn(self.comment_001.content, comment_textarea.text)  # 댓글 수정 전 내용인지
+
+        response = self.client.post(
+            f'/blog/update_comment/{self.comment_001.pk}/',
+            {
+                'content': "오바마의 댓글을 수정합니다.",
+            },
+            follow=True # 클래스 내용이 처리된 후 comment의 절대 경로로 리다이렉트
+        )
+
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        comment_001_div = soup.find('div', id='comment-1')
+        self.assertIn('오바마의 댓글을 수정합니다.', comment_001_div.text)  # 댓글 수정 후 내용이 동일한지
