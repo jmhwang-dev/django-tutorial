@@ -329,3 +329,110 @@ class TestView(TestCase):
         new_comment_div = comment_area.find('div', id=f'comment-{new_comment.pk}')
         self.assertIn('obama', new_comment_div.text)
         self.assertIn('오바마의 댓글입니다.', new_comment_div.text)
+
+    def test_comment_update(self,):
+        # 다른 사람이 작성한 댓글이 필요
+        comment_by_trump = Comment.objects.create(
+            post=self.post_001,
+            author=self.user_trump,
+            content="트럼프의 댓글"
+        )
+
+        # 로그인 하지 않은 상태
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # 로그인 하지 않으면 comment 영역에 수정 버튼이 둘다 보이지 않아야함
+        comment_area = soup.find('div', id='comment-area')
+        self.assertFalse(comment_area.find('a', id='comment-1-update-btn'))
+        self.assertFalse(comment_area.find('a', id='comment-2-update-btn'))
+
+        # obama로 로그인
+        self.client.login(username='obama', password='somepassword')
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        comment_area = soup.find('div', id='comment-area')
+        self.assertFalse(comment_area.find('a', id='comment-2-update-btn'))
+        comment_001_update_btn = comment_area.find('a', id='comment-1-update-btn')
+        self.assertIn('edit', comment_001_update_btn.text)
+        self.assertEqual(comment_001_update_btn.attrs['href'], '/blog/update_comment/1/')
+
+        response = self.client.get('/blog/update_comment/1/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # 수정 페이지가 맞는지
+        self.assertEqual('Edit Comment - Blog', soup.title.text)
+        update_comment_form = soup.find('form', id='comment-form')
+        comment_textarea = update_comment_form.find('textarea', id='id_content') # ??
+        self.assertIn(self.comment_001.content, comment_textarea.text)  # 댓글 수정 전 내용인지
+
+        response = self.client.post(
+            f'/blog/update_comment/{self.comment_001.pk}/',
+            {
+                'content': "오바마의 댓글을 수정합니다.",
+            },
+            follow=True # 클래스 내용이 처리된 후 comment의 절대 경로로 리다이렉트
+        )
+
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        comment_001_div = soup.find('div', id='comment-1')
+        self.assertIn('오바마의 댓글을 수정합니다.', comment_001_div.text)  # 댓글 수정 후 내용이 동일한지
+
+    def test_delete_comment(self,):
+        # 1
+        comment_by_trump = Comment.objects.create(
+            post=self.post_001,
+            author=self.user_trump,
+            content="트럼프의 댓글"
+        )
+
+        self.assertEqual(Comment.objects.count(), 2)
+
+        # 2 로그인하지 않은 상태
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        
+        # 로그인 하지 않으면 comment 영역에 삭제 버튼이 둘다 보이지 않아야함
+        comment_area = soup.find('div', id='comment-area')
+        self.assertFalse(comment_area.find('a', id='comment-1-delete-btn'))
+        self.assertFalse(comment_area.find('a', id='comment-2-delete-btn'))
+
+        # 3 트럼프로 로그인
+        self.client.login(username='trump', password='somepassword')
+        response = self.client.get(self.post_001.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        # 4
+        comment_area = soup.find('div', id='comment-area')
+        self.assertFalse(comment_area.find('a', id='comment-1-delete-btn'))
+        comment_002_delete_modal_btn = comment_area.find('a', id='comment-2-delete-modal-btn')
+        self.assertIn('delete', comment_002_delete_modal_btn.text)
+        self.assertEqual(comment_002_delete_modal_btn.attrs['data-bs-target'], '#deleteCommentModal-2')
+
+        # 5
+        delete_comment_modal_002 = soup.find('div', id='deleteCommentModal-2')
+        self.assertIn('Are you sure?', delete_comment_modal_002.text)
+        really_delete_btn_002 = delete_comment_modal_002.find('a')
+        self.assertIn('Delete', really_delete_btn_002)
+        self.assertEqual(
+            really_delete_btn_002.attrs['href'],
+            '/blog/delete_comment/2/'
+        )
+
+        # 6
+        response = self.client.get('/blog/delete_comment/2/', follow=True)
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+        self.assertIn(self.post_001.title, soup.title.text)
+        comment_area = soup.find('div', id='comment-area')
+        self.assertNotIn('트럼프의 댓글입니다.', comment_area.text)
+
+        self.assertEqual(Comment.objects.count(), 1)
+        self.assertEqual(self.post_001.comment_set.count(), 1)
