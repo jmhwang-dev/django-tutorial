@@ -13,7 +13,7 @@ import os
 from pathlib import Path
 from dotenv import load_dotenv
 load_dotenv()
-if os.getenv('CLIENT_ID') is None or os.getenv('SECRET_KEY') is None:
+if os.getenv('GOOGLE_CLIENT_ID') is None or os.getenv('GOOGLE_CLIENT_SECRET') is None:
   raise FileNotFoundError(".env does not exist")
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -77,8 +77,8 @@ SOCIALACCOUNT_PROVIDERS = {
         # (``socialaccount`` app) containing the required client
         # credentials, or list them here:
         'APP': {
-            'client_id': os.getenv('CLIENT_ID'),
-            'secret': os.getenv('SECRET_KEY'),
+            'client_id': os.getenv('GOOGLE_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_CLIENT_SECRET'),
             'key': ''
         }
     }
