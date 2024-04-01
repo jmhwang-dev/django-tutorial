@@ -5,7 +5,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, CreateView, UpdateView
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.shortcuts import get_object_or_404
-from .models import Post, Category, Tag, Comment
+from .models import Post, Category, Tag
 from .forms import CommentForm
 from django.core.exceptions import PermissionDenied
 from django.utils.text import slugify
@@ -124,26 +124,5 @@ def new_comment(request, pk):
             # locahost:8000/10/new_comment/ 와 같이 GET 방식으로 서버에 요청하는 경우를 대비해 임의로 pk=10인 포스트의 페이지로 리다이렉트 되도록 함
             post = get_object_or_404(Post, pk=10)
             return redirect(post.get_absolute_url())
-    else:
-        raise PermissionDenied
-    
-class CommentUpdate(LoginRequiredMixin, UpdateView):
-    # LoginRequiredMixin: POST 방식으로 정보를 보내는 상황 막기
-    model = Comment
-    form_class = CommentForm
-
-    # GET or POST 판단
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and request.user == self.get_object().author:
-            return super(CommentUpdate, self).dispatch(request, *args, **kwargs)
-        else:
-            raise PermissionDenied
-        
-def delete_comment(request, pk):
-    comment = get_object_or_404(Comment, pk=pk)
-    post = comment.post
-    if request.user.is_authenticated and request.user == comment.author:
-        comment.delete()
-        return redirect(post.get_absolute_url())
     else:
         raise PermissionDenied
