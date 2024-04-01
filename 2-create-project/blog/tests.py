@@ -358,3 +358,12 @@ class TestView(TestCase):
         comment_001_update_btn = comment_area.find('a', id='comment-1-update-btn')
         self.assertIn('edit', comment_001_update_btn.text)
         self.assertEqual(comment_001_update_btn.attrs['href'], '/blog/update_comment/1/')
+
+        response = self.client.get('/blog/update_comment/1/')
+        self.assertEqual(response.status_code, 200)
+        soup = BeautifulSoup(response.content, 'html.parser')
+
+        self.assertEqual('Edit Comment - Blog', soup.title.text)
+        update_comment_form = soup.find('form', id='comment-form')
+        comment_textarea = update_comment_form.find('textarea', id='id_content') # ??
+        self.assertIn(self.comment_001.content, comment_textarea.text)
