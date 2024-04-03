@@ -3,6 +3,18 @@ version: '3'
 
 services:
   # 서비스 이름
+  nginx:
+    build: ./nginx
+    # 컨테이너 종료 후에도 저장된 내용을 불러올수 있도록 설정
+    volumes:
+      - static_volume:/usr/src/app/_static
+      - media_volume:/usr/src/app/_media
+    # 도메인이나 IP 주소 뒤에 아무것도 안쓰면 기본 80
+    ports:
+      - 80:80
+    # web이라는 컨테이너에 의존성을 갖음
+    depends_on:
+      - web
   web:
     # 빌드경로. Dockerfile과 같은 경로에 있어야함
     build: .
@@ -10,9 +22,11 @@ services:
     command: gunicorn do_it_django_prj.wsgi:application --bind 0.0.0.0:8000
     # 로컬 컴퓨터의 폴더와 도커의 폴더()를 연결
     volumes:
+      - static_volume:/usr/src/app/_static
+      - media_volume:/usr/src/app/_media
       - ./:/usr/src/app/
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     env_file:
       - ./.env.prod
     depends_on:
@@ -25,4 +39,7 @@ services:
     - ./.env.prod.db
 
 volumes:
+  # 컨테이너 종료 후에도 저장된 내용을 불러올수 있도록 설정
   postgres_data:
+  static_volume:
+  media_volume:
