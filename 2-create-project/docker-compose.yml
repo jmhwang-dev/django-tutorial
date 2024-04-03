@@ -1,0 +1,17 @@
+# 도커 컴포즈 파일 포맷을 최신 버전으로 사용한다.
+version: '3'
+
+services:
+  # 서비스 이름
+  web:
+    # 빌드경로. Dockerfile과 같은 경로에 있어야함
+    build: .
+    # 터미널 실행 명령어
+    command: python manage.py runserver 0.0.0.0:8000
+    # 로컬 컴퓨터의 폴더와 도커의 폴더()를 연결
+    volumes:
+      - ./:/usr/src/app/
+    ports:
+      - 8000:8000
+    env_file:
+      - ./.env.dev
