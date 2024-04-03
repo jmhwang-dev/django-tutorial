@@ -5,3 +5,5 @@ _media/
 .env.dev
 .env
 _static
+.env.prod
+.env.prod.db
