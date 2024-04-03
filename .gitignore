@@ -4,3 +4,4 @@ migrations/
 _media/
 .env.dev
 .env
+_static
