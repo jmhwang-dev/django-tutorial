@@ -21,3 +21,6 @@ python-dotenv==1.0.1
 
 # postgres
 psycopg2-binary==2.9.9
+
+# 웹서버와 장고 연결
+gunicorn==21.2.0
