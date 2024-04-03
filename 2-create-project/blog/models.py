@@ -73,3 +73,9 @@ class Comment(models.Model):
         : 관리자 페이지에서 포스트에 대한 댓글 위치로 바로 이동하는 기능
         """
         return f'{self.post.get_absolute_url()}#comment-{self.pk}'  # 여기서 '#'은 HTML 요소의 id를 의미한다.
+    
+    def get_avatar_url(self):
+        if self.author.socialaccount_set.exists():
+            return self.author.socialaccount_set.first().get_avatar_url()
+        else:
+            return "https://dummyimage.com/50x50/ced4da/6c757d.jpg"

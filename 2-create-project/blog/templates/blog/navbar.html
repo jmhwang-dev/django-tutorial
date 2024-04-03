@@ -1,26 +1,35 @@
 {% load socialaccount %}
 
 <nav class="navbar navbar-expand-lg bg-body-tertiary">
-  <div class="container">
-      <a class="navbar-brand" href="/">Do It Django</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
-          aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavDropdown">
-          <ul class="navbar-nav">
-              <li class="nav-item">
-                  <a class="nav-link active" aria-current="page" href="/">Home</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/blog/">Blog</a>
-              </li>
-              <li class="nav-item">
-                  <a class="nav-link" href="/about_me/">About Me</a>
-              </li>
-          </ul>
-          <ul class="navbar-nav ms-auto">
+    <div class="container">
+        <a class="navbar-brand" href="/">Do It Django</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="/">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/blog/">Blog</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/about_me/">About Me</a>
+                </li>
+            </ul>
+
+            <ul class="navbar-nav ms-auto align-items-center">
                 {% if user.is_authenticated %}
+
+                {% if user.socialaccount_set.all.0.get_avatar_url %}
+                <img class="d-flex mr-3 rounded-circle" src="{{ user.socialaccount_set.all.0.get_avatar_url }}"
+                    alt="{{ user.author }}" width="25px" />
+                {% else %}
+                <img class="d-flex mr-3 rounded-circle" src="https://dummyimage.com/50x50/ced4da/6c757d.jpg"
+                    alt="{{ user.author }}" width="25px" height="25px" />
+                {% endif %}
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
@@ -36,36 +45,36 @@
                         <i class="fa-solid fa-right-to-bracket"></i> Log In</a>
                 </li>
                 {% endif %}
-          </ul>
-      </div>
-  </div>
+            </ul>
+        </div>
+    </div>
 </nav>
 
 <!-- Modal -->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-      <div class="modal-content">
-          <div class="modal-header">
-              <h1 class="modal-title fs-5" id="exampleModalLabel">Log In</h1>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-              <div class="row">
-                  <div class="col-md-6 d-grid gap-2 bg-primary">
-                      <a role="button" type="button" class="btn btn-outline-dark btn-sm" href="{% provider_login_url 'google'%}"><i
-                              class="fa-brands fa-google"></i> Log in with Google</a>
-                      <a role="button" class="btn btn-outline-dark btn-sm" href="/accounts/login/"><i
-                              class="fa-solid fa-envelope"></i> Log in with E-mail</a>
-                  </div>
-                  <div class="col-md-6 d-grid gap-2 align-self-start bg-success">
-                      <a role="button" class="btn btn-outline-dark btn-sm" href="/accounts/signup/"><i
-                              class="fa-solid fa-envelope"></i> Sign up with E-mail</a>
-                  </div>
-              </div>
-          </div>
-          <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          </div>
-      </div>
-  </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">Log In</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 d-grid gap-2 bg-primary">
+                        <a role="button" type="button" class="btn btn-outline-dark btn-sm"
+                            href="{% provider_login_url 'google'%}"><i class="fa-brands fa-google"></i> Log in with Google</a>
+                        <a role="button" class="btn btn-outline-dark btn-sm" href="/accounts/login/"><i
+                                class="fa-solid fa-envelope"></i> Log in with E-mail</a>
+                    </div>
+                    <div class="col-md-6 d-grid gap-2 align-self-start bg-success">
+                        <a role="button" class="btn btn-outline-dark btn-sm" href="/accounts/signup/"><i
+                                class="fa-solid fa-envelope"></i> Sign up with E-mail</a>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
 </div>
