@@ -1,0 +1,54 @@
+# 도커 컴포즈 파일 포맷을 최신 버전으로 사용한다.
+version: '3'
+
+services:
+  # 서비스 이름
+  nginx:
+    build: ./nginx
+    # 컨테이너 종료 후에도 저장된 내용을 불러올수 있도록 설정
+    volumes:
+      - static_volume:/usr/src/app/_static
+      - media_volume:/usr/src/app/_media
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+    # 도메인이나 IP 주소 뒤에 아무것도 안쓰면 기본 80
+    ports:
+      - 80:80
+      - 443:443 # Nginx 웹 서버가 SSL로 통신하기 위한 443번 포트 추가
+    # web이라는 컨테이너에 의존성을 갖음
+    depends_on:
+      - web
+  certbot:
+    image: certbot/certbot  # 도커에서 제공하는 이미지를 가져와서 사용
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;"  # 12시간 마다 certbot을 실행하여 인증서를 갱신. 인증서 만료일이 다가오면 등록한 이메일로 알림이 옴
+    volumes:
+      - ./data/certbot/conf:/etc/letsencrypt
+      - ./data/certbot/www:/var/www/certbot
+  web:
+    # 빌드경로. Dockerfile과 같은 경로에 있어야함
+    build: .
+    # 터미널 실행 명령어
+    command: gunicorn do_it_django_prj.wsgi:application --bind 0.0.0.0:8000
+    # 로컬 컴퓨터의 폴더와 도커의 폴더()를 연결
+    volumes:
+      - static_volume:/usr/src/app/_static
+      - media_volume:/usr/src/app/_media
+      - ./:/usr/src/app/
+    expose:
+      - 8000
+    env_file:
+      - ./.env.prod
+    depends_on:
+      - db  # 'web' 컨테이너는 'db'라는 컨테이너가 실행된 이후에 시작해야한다.
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file:
+    - ./.env.prod.db
+
+volumes:
+  # 컨테이너 종료 후에도 저장된 내용을 불러올수 있도록 설정
+  postgres_data:
+  static_volume:
+  media_volume:
