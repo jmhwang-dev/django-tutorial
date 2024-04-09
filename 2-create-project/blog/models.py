@@ -85,3 +85,6 @@ class Comment(models.Model):
             return self.author.socialaccount_set.first().get_avatar_url()
         else:
             return "https://dummyimage.com/50x50/ced4da/6c757d.jpg"
+        
+    def is_modified(self,):
+        return True if (self.modified_at - self.created_at).total_seconds() > 1 else False

@@ -92,8 +92,7 @@
                     </div>
 
                     <div class="ms-3">
-                        <div class="fw-bold">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{
-                                comment.created_at }}</small></div>
+                        <div class="fw-bold">{{ comment.author.username }} &nbsp;&nbsp;<small class="text-muted">{{ comment.created_at }}</small></div>
                         <p>{{ comment.content | linebreaks }} </p>
                         {% if user.is_authenticated and comment.author == user %}
                         <a role="button" class="btn btn-sm btn-info" id="comment-{{ comment.pk }}-update-btn"
@@ -101,6 +100,9 @@
                         <a role="button" class="btn btn-sm btn-danger" id="comment-{{ comment.pk }}-delete-modal-btn"
                             data-bs-toggle="modal" data-bs-target="#deleteCommentModal-{{comment.pk}}"
                             href="#">delete</a>
+                            {% if comment.is_modified %}
+                            <p class="text-muted float-end"><small>Updated: {{ comment.modified_at }}</small></p>
+                            {% endif %}
                         {% endif %}
                     </div>
 
